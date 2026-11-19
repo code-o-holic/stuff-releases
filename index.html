@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>stuff | a fast, local moodboard for Windows</title>
+<meta name="description" content="stuff is a native Windows moodboard. Drop images, videos, PDFs, fonts and notes on one endless board. Local-first, instant, free to download.">
+<meta property="og:title" content="stuff">
+<meta property="og:description" content="Drop everything. See it all. A fast, local moodboard for Windows.">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a0a0a'/%3E%3Ctext x='16' y='23' font-family='monospace' font-size='22' font-weight='700' text-anchor='middle' fill='%23e8e8e8'%3Es%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --ink: #e8e8e8;
+    --ink-2: #999;
+    --ink-3: #666;
+    --line: #1a1a1a;
+    --line-2: #2a2a2a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; overflow-x: clip; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Space Mono", ui-monospace, monospace;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  a { color: inherit; }
+  ::selection { background: var(--ink); color: var(--bg); }
+
+  /* header */
+  .app-header {
+    position: relative; z-index: 3;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--line-2);
+  }
+  .app-title { font-size: 13.6px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; text-decoration: none; }
+  .app-nav { display: flex; gap: 24px; font-size: 10.4px; letter-spacing: .15em; text-transform: uppercase; color: var(--ink-3); }
+  .app-nav a { text-decoration: none; transition: color .15s; }
+  .app-nav a:hover { color: var(--ink); }
+
+  /* hero */
+  .hero-section {
+    position: relative; overflow: hidden; isolation: isolate;
+    padding: 96px 32px 72px;
+    border-bottom: 1px solid var(--line-2);
+    margin-top: -62px; padding-top: 158px;
+  }
+  .aurora { position: absolute; inset: 0; z-index: -1; filter: blur(60px); opacity: .38; }
+  .aurora i { position: absolute; top: -20%; bottom: -20%; width: 34%; border-radius: 50%; mix-blend-mode: screen; will-change: transform; }
+  .aurora i:nth-child(1) { left: -6%;  background: #3a1a6b; animation: drift1 18s ease-in-out infinite alternate; }
+  .aurora i:nth-child(2) { left: 24%;  background: #0b4a3a; animation: drift2 22s ease-in-out infinite alternate; }
+  .aurora i:nth-child(3) { left: 54%;  background: #0b3a6b; animation: drift3 26s ease-in-out infinite alternate; }
+  .aurora i:nth-child(4) { left: 80%;  background: #1a2a7a; animation: drift1 20s ease-in-out infinite alternate-reverse; }
+  .aurora::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 0 18%, rgba(10,10,10,.92) 30%, transparent 45%); }
+  @keyframes drift1 { to { transform: translateX(18%) scaleX(1.25); } }
+  @keyframes drift2 { to { transform: translateX(-16%) scaleX(.8); } }
+  @keyframes drift3 { to { transform: translateX(14%) scaleX(1.15); } }
+  .hero-heading { font-size: clamp(32px, 6vw, 72px); font-weight: 700; line-height: 1.12; max-width: 14ch; }
+  .hero-actions { margin-top: 40px; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+  .btn {
+    display: inline-block; cursor: pointer;
+    font: 700 12px "Space Mono", monospace; letter-spacing: .1em; text-transform: uppercase; text-decoration: none;
+    color: var(--ink); background: transparent; border: 1px solid var(--ink); padding: 12px 32px;
+    transition: background .15s, color .15s;
+  }
+  .btn:hover, .btn:focus-visible { background: var(--ink); color: var(--bg); outline: none; }
+  .btn.ghost { border-color: var(--line-2); color: var(--ink-2); }
+  .btn.ghost:hover { border-color: var(--ink); color: var(--bg); }
+  .hero-tagline { margin-top: 56px; font-size: 10.4px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-3); }
+
+  /* numbered grid */
+  .bento { display: grid; grid-template-columns: repeat(2, 1fr); border-bottom: 1px solid var(--line-2); }
+  .bento-item {
+    position: relative; padding: 48px 32px 40px; min-height: 260px;
+    display: flex; flex-direction: column; gap: 14px;
+    border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  }
+  .bento-item:nth-child(2n) { border-right: 0; }
+  .bento-item:nth-last-child(-n+2) { border-bottom: 0; }
+  .bento-number { font-size: 10.4px; letter-spacing: .15em; text-transform: uppercase; color: var(--ink-3); }
+  .bento-title { font-size: 21.6px; font-weight: 700; line-height: 1.5; max-width: 22ch; }
+  .bento-desc { font-size: 12px; line-height: 1.7; color: var(--ink-2); max-width: 46ch; }
+  .bento-arrow { margin-top: auto; font-size: 15.2px; color: var(--ink-3); transition: transform .2s, color .2s; }
+  .bento-item:hover .bento-arrow { transform: translateX(6px); color: var(--ink); }
+
+  /* sections: download and steps */
+  .block { padding: 72px 32px; border-bottom: 1px solid var(--line-2); }
+  .block-head { margin-bottom: 40px; }
+  .block-title { font-size: clamp(22px, 3vw, 32px); font-weight: 700; margin-top: 14px; line-height: 1.3; }
+  .block-sub { margin-top: 14px; font-size: 12px; line-height: 1.7; color: var(--ink-2); max-width: 60ch; }
+
+  .dl-card { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: center; border: 1px solid var(--line-2); padding: 32px; }
+  .dl-meta { display: grid; gap: 10px; font-size: 12px; color: var(--ink-2); }
+  .dl-meta b { color: var(--ink); font-weight: 700; }
+  .dl-meta .k { color: var(--ink-3); letter-spacing: .15em; text-transform: uppercase; font-size: 10.4px; margin-right: 12px; }
+  .dl-card .btn { padding: 18px 40px; font-size: 13.6px; }
+  .hash { word-break: break-all; font-size: 11px; color: var(--ink-2); }
+
+  .steps { display: grid; gap: 0; border: 1px solid var(--line-2); }
+  .step { display: grid; grid-template-columns: 64px 1fr; gap: 24px; padding: 32px; border-bottom: 1px solid var(--line); }
+  .step:last-child { border-bottom: 0; }
+  .step > div { min-width: 0; }
+  .step-n { font-size: 21.6px; font-weight: 700; color: var(--ink-3); }
+  .step h3 { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+  .step p, .step li { font-size: 12px; line-height: 1.8; color: var(--ink-2); max-width: 70ch; }
+  .step ul { margin: 8px 0 0 18px; }
+  .step em { font-style: normal; color: var(--ink); }
+  pre {
+    margin-top: 14px; padding: 14px 16px; overflow-x: auto; max-width: 70ch;
+    background: #111; border: 1px solid var(--line-2);
+    font: 400 12px/1.7 "Space Mono", monospace; color: var(--ink);
+  }
+  .note { margin-top: 24px; font-size: 12px; line-height: 1.8; color: var(--ink-3); max-width: 70ch; }
+
+  footer { padding: 32px; border-top: 0; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  footer p, footer a { font-size: 10.4px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); text-decoration: none; }
+  footer a:hover { color: var(--ink); }
+
+  @media (max-width: 760px) {
+    .app-header { padding: 20px; } .app-nav { gap: 16px; }
+    .hero-section { padding: 148px 20px 56px; }
+    .bento { grid-template-columns: 1fr; }
+    .bento-item { border-right: 0; padding: 40px 20px 32px; min-height: 0; border-bottom: 1px solid var(--line) !important; }
+    .bento-item:last-child { border-bottom: 0 !important; }
+    .block { padding: 56px 20px; }
+    .dl-card { grid-template-columns: 1fr; padding: 24px; }
+    .step { grid-template-columns: 1fr; gap: 8px; padding: 24px; }
+    footer { padding: 24px 20px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .aurora i { animation: none; } html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <a class="app-title" href="#">stuff</a>
+  <nav class="app-nav">
+    <a href="#download">Download</a>
+    <a href="#steps">Steps</a>
+    <a href="#windows">Windows warning</a>
+  </nav>
+</header>
+
+<section class="hero-section">
+  <div class="aurora" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+  <h1 class="hero-heading">drop everything. see it all. instantly.</h1>
+  <div class="hero-actions">
+    <a class="btn" href="https://github.com/code-o-holic/stuff-releases/releases/latest/download/stuff.exe" id="hero-dl">Download for Windows &darr;</a>
+    <a class="btn ghost" href="#steps">How to install</a>
+  </div>
+  <p class="hero-tagline">Local-first. Native. Instant.</p>
+</section>
+
+<section class="bento">
+  <a class="bento-item" href="#download" style="text-decoration:none">
+    <p class="bento-number">01. The board</p>
+    <p class="bento-title">One endless paper.</p>
+    <p class="bento-desc">Images, videos, PDFs, spreadsheets, fonts, links and notes on a single board. Files stay where they are on disk. Nothing is copied, nothing is uploaded.</p>
+    <span class="bento-arrow">&rarr;</span>
+  </a>
+  <a class="bento-item" href="#download" style="text-decoration:none">
+    <p class="bento-number">02. The speed</p>
+    <p class="bento-title">Native. Built for piles.</p>
+    <p class="bento-desc">Hundreds of full-size photos and clips on screen at once, and it still pans and zooms smoothly. Drawn on the GPU, with big images decoded only as large as you see them.</p>
+    <span class="bento-arrow">&rarr;</span>
+  </a>
+  <a class="bento-item" href="#download" style="text-decoration:none">
+    <p class="bento-number">03. The tools</p>
+    <p class="bento-title">Crop. Trim. Annotate.</p>
+    <p class="bento-desc">Non-destructive crop with presets, trim a clip to the part you need, draw shapes, arrows and freehand, set type in any installed font. Undo anything.</p>
+    <span class="bento-arrow">&rarr;</span>
+  </a>
+  <a class="bento-item" href="#download" style="text-decoration:none">
+    <p class="bento-number">04. The copilot</p>
+    <p class="bento-title">Ask your board.</p>
+    <p class="bento-desc">Chat with Claude from inside the board. It can look at what you collected, group it into sections, label it and lay it out. Works with your own Claude install.</p>
+    <span class="bento-arrow">&rarr;</span>
+  </a>
+</section>
+
+<section class="block" id="download">
+  <div class="block-head">
+    <p class="bento-number">05. Download</p>
+    <h2 class="block-title">Free for Windows.</h2>
+    <p class="block-sub">One file. No installer, nothing else to install. Windows 10 or 11, 64-bit.</p>
+  </div>
+  <div class="dl-card">
+    <div class="dl-meta">
+      <div><span class="k">File</span><b>stuff.exe</b></div>
+      <div><span class="k">Version</span><b id="dl-ver">latest</b></div>
+      <div><span class="k">Size</span><b id="dl-size">about 76 MB</b></div>
+      <div><span class="k">SHA-256</span><span class="hash" id="dl-hash">shown on the release page</span></div>
+    </div>
+    <a class="btn" id="dl-btn" href="https://github.com/code-o-holic/stuff-releases/releases/latest/download/stuff.exe">Download stuff.exe &darr;</a>
+  </div>
+  <p class="note">Updates itself. When a new version is out, stuff downloads it quietly, checks it, and shows a RESTART button. Nothing is replaced until you click it. Your boards live in your user folder and are never touched by an update.</p>
+</section>
+
+<section class="block" id="steps">
+  <div class="block-head">
+    <p class="bento-number">06. Steps</p>
+    <h2 class="block-title">Download to first board in a minute.</h2>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="step-n">01</div><div>
+      <h3>Download</h3>
+      <p>Press the download button. Your browser may ask whether to keep <em>stuff.exe</em>. Choose <em>Keep</em> (Edge: "..." &rarr; Keep &rarr; Keep anyway; Chrome: the arrow &rarr; Keep).</p>
+    </div></div>
+    <div class="step"><div class="step-n">02</div><div>
+      <h3>Put it somewhere</h3>
+      <p>Move <em>stuff.exe</em> to a folder you'll keep it in, for example <em>Documents\stuff</em>. It can update itself there, so pick a folder you can write to, not Program Files.</p>
+    </div></div>
+    <div class="step"><div class="step-n">03</div><div>
+      <h3>Run it</h3>
+      <p>Double-click <em>stuff.exe</em>. The first time, Windows may show a blue warning. That is expected, see <a href="#windows">the next section</a>. After you allow it once, it won't ask again.</p>
+    </div></div>
+    <div class="step"><div class="step-n">04</div><div>
+      <h3>Make a board</h3>
+      <p>Drag files onto the window. Press <em>Tab</em> or click the scroll wheel for the tool wheel, <em>/</em> to ask Claude. It lives in the tray, so closing the window puts it away instead of quitting.</p>
+    </div></div>
+  </div>
+</section>
+
+<section class="block" id="windows">
+  <div class="block-head">
+    <p class="bento-number">07. If Windows warns you</p>
+    <h2 class="block-title">Why it warns, and how to get past it.</h2>
+    <p class="block-sub">stuff is a small independent app and isn't code-signed yet (signing certificates are paid and sized for companies). Windows shows a warning for any program it hasn't seen many people run. It doesn't mean something is wrong, but you should only run it if you downloaded it from this page. Here is how to check, then run it.</p>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="step-n">A</div><div>
+      <h3>Verify the file first</h3>
+      <p>Compare your download with the SHA-256 shown in the download box above (or on the release page). In PowerShell, from the folder with the file:</p>
+      <pre>Get-FileHash .\stuff.exe -Algorithm SHA256</pre>
+      <p style="margin-top:12px">If the two hashes are identical, it's the exact file that was published. If they differ, delete it and download again.</p>
+    </div></div>
+    <div class="step"><div class="step-n">B</div><div>
+      <h3>"Windows protected your PC" (SmartScreen)</h3>
+      <ul>
+        <li>Click <em>More info</em> (the small link under the message).</li>
+        <li>Click <em>Run anyway</em>.</li>
+      </ul>
+      <p style="margin-top:10px">If there is no Run anyway button: close the box, right-click <em>stuff.exe</em> &rarr; <em>Properties</em> &rarr; tick <em>Unblock</em> at the bottom &rarr; <em>OK</em>, then run it again.</p>
+    </div></div>
+    <div class="step"><div class="step-n">C</div><div>
+      <h3>Antivirus quarantined it or says "threat found"</h3>
+      <p>Unsigned programs that are new and rare are sometimes flagged by mistake (a "false positive"). stuff is a single self-contained .exe, which some scanners treat with suspicion. If you checked the hash in step A and trust the source:</p>
+      <ul>
+        <li><em>Windows Security</em> &rarr; <em>Virus &amp; threat protection</em> &rarr; <em>Protection history</em> &rarr; open the entry for stuff.exe &rarr; <em>Actions</em> &rarr; <em>Allow on device</em>.</li>
+        <li>Or add the folder you keep it in as an exclusion: <em>Virus &amp; threat protection</em> &rarr; <em>Manage settings</em> &rarr; <em>Exclusions</em> &rarr; <em>Add or remove exclusions</em> &rarr; <em>Add an exclusion</em> &rarr; <em>Folder</em>.</li>
+        <li>Other antivirus: look for "quarantine", "restore" or "allow list", and restore the file, then allow it.</li>
+      </ul>
+      <p style="margin-top:10px">Only exclude the one folder that holds stuff.exe, never a whole drive. Help the rest of us too: report the false positive to your antivirus vendor (Microsoft takes submissions at <a href="https://www.microsoft.com/wdsi/filesubmission" rel="noopener">microsoft.com/wdsi/filesubmission</a>).</p>
+    </div></div>
+  </div>
+  <p class="note">Want to be sure before running it? Upload stuff.exe to a multi-scanner such as VirusTotal and look at the result yourself.</p>
+</section>
+
+<footer>
+  <p>Local-first moodboard</p>
+  <a href="https://github.com/code-o-holic/stuff-releases/releases">All releases</a>
+</footer>
+
+<script>
+(function () {
+  // Fill in the version, size and checksum from the latest release. The page works without it.
+  var api = "https://api.github.com/repos/code-o-holic/stuff-releases/releases/latest";
+  fetch(api).then(function (r) { return r.ok ? r.json() : Promise.reject(); }).then(function (rel) {
+    var tag = (rel.tag_name || "").replace(/^v/i, "");
+    if (tag) document.getElementById("dl-ver").textContent = tag;
+    (rel.assets || []).forEach(function (a) {
+      if (a.name === "stuff.exe") document.getElementById("dl-size").textContent = (a.size / 1048576).toFixed(0) + " MB";
+      if (a.name === "stuff.exe.sha256") {
+        fetch(a.browser_download_url).then(function (r) { return r.text(); }).then(function (t) {
+          var h = (t.trim().split(/\s+/)[0] || "").toUpperCase();
+          if (/^[0-9A-F]{64}$/.test(h)) document.getElementById("dl-hash").textContent = h;
+        }).catch(function () {});
+      }
+    });
+  }).catch(function () {});
+})();
+</script>
+</body>
+</html>
