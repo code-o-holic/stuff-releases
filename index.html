@@ -119,6 +119,26 @@
   }
   .note { margin-top: 24px; font-size: 12px; line-height: 1.8; color: var(--ink-3); max-width: 70ch; }
 
+
+  /* the Windows-warning section: loud on purpose */
+  .heads-up { display: block; margin-top: 20px; padding: 16px 20px; border: 1px solid #f5b83d; background: rgba(245,184,61,.08); color: #ffe2a3; font-size: 13px; line-height: 1.7; text-decoration: none; }
+  .heads-up b { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; margin-right: 10px; background: #f5b83d; color: #0a0a0a; border-radius: 50%; }
+  .heads-up:hover { background: rgba(245,184,61,.14); }
+  .warn { background: linear-gradient(180deg, rgba(245,184,61,.07), rgba(245,184,61,.02)); border-left: 4px solid #f5b83d; border-bottom-color: var(--line-2); }
+  .warn .bento-number { color: #f5b83d; }
+  .warn .block-title { font-size: clamp(26px, 3.6vw, 40px); }
+  .warn .block-sub { font-size: 15px; line-height: 1.8; color: #d4d4d4; max-width: 66ch; }
+  .warn .steps { border-color: #3a3220; background: #0d0d0c; }
+  .warn .step { border-bottom-color: #2a2518; }
+  .warn .step-n { color: #f5b83d; font-size: 28px; }
+  .warn .step h3 { font-size: 19px; margin-bottom: 12px; }
+  .warn .step p, .warn .step li { font-size: 14.5px; line-height: 1.85; color: #d0d0d0; max-width: 72ch; }
+  .warn .step li { margin-bottom: 6px; }
+  .warn .step em { color: #ffe2a3; font-weight: 700; }
+  .warn pre { font-size: 14px; border-color: #3a3220; background: #141412; }
+  .warn .note { font-size: 13.5px; color: #aaa; }
+  .warn a { color: #ffe2a3; }
+
   footer { padding: 32px; border-top: 0; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
   footer p, footer a { font-size: 10.4px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); text-decoration: none; }
   footer a:hover { color: var(--ink); }
@@ -132,6 +152,8 @@
     .block { padding: 56px 20px; }
     .dl-card { grid-template-columns: 1fr; padding: 24px; }
     .step { grid-template-columns: 1fr; gap: 8px; padding: 24px; }
+    .warn { border-left-width: 3px; }
+    .warn .step p, .warn .step li { font-size: 14px; }
     footer { padding: 24px 20px; }
   }
   @media (prefers-reduced-motion: reduce) { .aurora i { animation: none; } html { scroll-behavior: auto; } }
@@ -143,8 +165,8 @@
   <a class="app-title" href="#">stuff</a>
   <nav class="app-nav">
     <a href="#download">Download</a>
-    <a href="#steps">Steps</a>
     <a href="#windows">Windows warning</a>
+    <a href="#steps">Steps</a>
   </nav>
 </header>
 
@@ -153,7 +175,7 @@
   <h1 class="hero-heading">drop everything. see it all. instantly.</h1>
   <div class="hero-actions">
     <a class="btn" href="https://github.com/code-o-holic/stuff-releases/releases/latest/download/stuff.exe" id="hero-dl">Download for Windows &darr;</a>
-    <a class="btn ghost" href="#steps">How to install</a>
+    <a class="btn ghost" href="#windows">Windows warning? Read this</a>
   </div>
   <p class="hero-tagline">Local-first. Native. Instant.</p>
 </section>
@@ -200,38 +222,14 @@
     </div>
     <a class="btn" id="dl-btn" href="https://github.com/code-o-holic/stuff-releases/releases/latest/download/stuff.exe">Download stuff.exe &darr;</a>
   </div>
+  <a class="heads-up" href="#windows"><b>!</b> Windows may show a blue "protected your PC" box the first time. That is normal for a new unsigned app. Here is how to get past it &darr;</a>
   <p class="note">Updates itself. When a new version is out, stuff downloads it quietly, checks it, and shows a RESTART button. Nothing is replaced until you click it. Your boards live in your user folder and are never touched by an update.</p>
 </section>
 
-<section class="block" id="steps">
+<section class="block warn" id="windows">
   <div class="block-head">
-    <p class="bento-number">06. Steps</p>
-    <h2 class="block-title">Download to first board in a minute.</h2>
-  </div>
-  <div class="steps">
-    <div class="step"><div class="step-n">01</div><div>
-      <h3>Download</h3>
-      <p>Press the download button. Your browser may ask whether to keep <em>stuff.exe</em>. Choose <em>Keep</em> (Edge: "..." &rarr; Keep &rarr; Keep anyway; Chrome: the arrow &rarr; Keep).</p>
-    </div></div>
-    <div class="step"><div class="step-n">02</div><div>
-      <h3>Put it somewhere</h3>
-      <p>Move <em>stuff.exe</em> to a folder you'll keep it in, for example <em>Documents\stuff</em>. It can update itself there, so pick a folder you can write to, not Program Files.</p>
-    </div></div>
-    <div class="step"><div class="step-n">03</div><div>
-      <h3>Run it</h3>
-      <p>Double-click <em>stuff.exe</em>. The first time, Windows may show a blue warning. That is expected, see <a href="#windows">the next section</a>. After you allow it once, it won't ask again.</p>
-    </div></div>
-    <div class="step"><div class="step-n">04</div><div>
-      <h3>Make a board</h3>
-      <p>Drag files onto the window. Press <em>Tab</em> or click the scroll wheel for the tool wheel, <em>/</em> to ask Claude. It lives in the tray, so closing the window puts it away instead of quitting.</p>
-    </div></div>
-  </div>
-</section>
-
-<section class="block" id="windows">
-  <div class="block-head">
-    <p class="bento-number">07. If Windows warns you</p>
-    <h2 class="block-title">Why it warns, and how to get past it.</h2>
+    <p class="bento-number">06. Read this before you run it</p>
+    <h2 class="block-title">Windows will warn you. Here is what to click.</h2>
     <p class="block-sub">stuff is a small independent app and isn't code-signed yet (signing certificates are paid and sized for companies). Windows shows a warning for any program it hasn't seen many people run. It doesn't mean something is wrong, but you should only run it if you downloaded it from this page. Here is how to check, then run it.</p>
   </div>
   <div class="steps">
@@ -261,6 +259,31 @@
     </div></div>
   </div>
   <p class="note">Want to be sure before running it? Upload stuff.exe to a multi-scanner such as VirusTotal and look at the result yourself.</p>
+</section>
+
+<section class="block" id="steps">
+  <div class="block-head">
+    <p class="bento-number">07. Steps</p>
+    <h2 class="block-title">Download to first board in a minute.</h2>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="step-n">01</div><div>
+      <h3>Download</h3>
+      <p>Press the download button. Your browser may ask whether to keep <em>stuff.exe</em>. Choose <em>Keep</em> (Edge: "..." &rarr; Keep &rarr; Keep anyway; Chrome: the arrow &rarr; Keep).</p>
+    </div></div>
+    <div class="step"><div class="step-n">02</div><div>
+      <h3>Put it somewhere</h3>
+      <p>Move <em>stuff.exe</em> to a folder you'll keep it in, for example <em>Documents\stuff</em>. It can update itself there, so pick a folder you can write to, not Program Files.</p>
+    </div></div>
+    <div class="step"><div class="step-n">03</div><div>
+      <h3>Run it</h3>
+      <p>Double-click <em>stuff.exe</em>. The first time, Windows may show a blue warning. That is expected, see <a href="#windows">the next section</a>. After you allow it once, it won't ask again.</p>
+    </div></div>
+    <div class="step"><div class="step-n">04</div><div>
+      <h3>Make a board</h3>
+      <p>Drag files onto the window. Press <em>Tab</em> or click the scroll wheel for the tool wheel, <em>/</em> to ask Claude. It lives in the tray, so closing the window puts it away instead of quitting.</p>
+    </div></div>
+  </div>
 </section>
 
 <footer>
