@@ -276,12 +276,11 @@
     var tag = (rel.tag_name || "").replace(/^v/i, "");
     if (tag) document.getElementById("dl-ver").textContent = tag;
     (rel.assets || []).forEach(function (a) {
-      if (a.name === "stuff.exe") document.getElementById("dl-size").textContent = (a.size / 1048576).toFixed(0) + " MB";
-      if (a.name === "stuff.exe.sha256") {
-        fetch(a.browser_download_url).then(function (r) { return r.text(); }).then(function (t) {
-          var h = (t.trim().split(/\s+/)[0] || "").toUpperCase();
-          if (/^[0-9A-F]{64}$/.test(h)) document.getElementById("dl-hash").textContent = h;
-        }).catch(function () {});
+      if (a.name === "stuff.exe") {
+        document.getElementById("dl-size").textContent = (a.size / 1048576).toFixed(0) + " MB";
+        // GitHub publishes each asset's SHA-256 as its digest ("sha256:...").
+        var h = String(a.digest || "").replace(/^sha256:/i, "").toUpperCase();
+        if (/^[0-9A-F]{64}$/.test(h)) document.getElementById("dl-hash").textContent = h;
       }
     });
   }).catch(function () {});
